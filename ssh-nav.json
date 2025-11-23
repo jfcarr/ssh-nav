@@ -1,0 +1,28 @@
+{
+    "Settings": {
+        "Title": "My Application",
+        "Timeout": 30
+    },
+    "HostDefinitions": [
+        {
+            "Name": "u50",
+            "Type": "ssh",
+            "HostName": "unix50.org",
+            "UserName": "unix50",
+            "Password": "unix50",
+            "PasswordType": "inline",
+            "Port": 22
+        }
+    ],
+    "HostDefinitionHelp": {
+        "ValidConnectionTypes": "ssh, sftp",
+        "ValidPasswordTypes": "inline, env_variable, prompt",
+        "DefaultValues": [
+            {
+                "Password": "",
+                "PasswordType": "prompt",
+                "Port": 22
+            }
+        ]
+    }
+}
