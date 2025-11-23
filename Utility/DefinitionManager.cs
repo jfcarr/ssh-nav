@@ -100,4 +100,28 @@ public class DefinitionManager
         else
             return -99;
     }
+
+    public void DisplayHostStatuses()
+    {
+        Console.Write("Checking ");
+
+        Table hostDefinitionsTable = new();
+
+        hostDefinitionsTable.AddColumn("Name");
+        hostDefinitionsTable.AddColumn("Type");
+        hostDefinitionsTable.AddColumn("Host Name");
+        hostDefinitionsTable.AddColumn("Status");
+
+        foreach (HostDefinition item in this.HostDefinitions)
+        {
+            bool status = NetworkUtil.Ping(item.HostName ?? "");
+
+            hostDefinitionsTable.AddRow(item.Name ?? "", item.Type ?? "", item.HostName ?? "", (status) ? "[green]Online[/]" : "[red]Offline[/]");
+
+            Console.Write($"{item.Name} ");
+        }
+        Console.WriteLine("");
+
+        AnsiConsole.Write(hostDefinitionsTable);
+    }
 }

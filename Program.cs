@@ -41,6 +41,11 @@ internal sealed class FileSizeCommand : Command<FileSizeCommand.Settings>
         [CommandOption("-x|--show-passwords")]
         [DefaultValue(false)]
         public bool ShowPasswordValues { get; init; }
+
+        [Description("Check host online statuses")]
+        [CommandOption("-o|--online")]
+        [DefaultValue(false)]
+        public bool CheckHostOnlineStatuses { get; init; }
     }
 
     public override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
@@ -66,6 +71,12 @@ internal sealed class FileSizeCommand : Command<FileSizeCommand.Settings>
         {
             actionTaken = true;
             definitionManager.DisplayDefinitions(settings.ShowPasswordValues, settings.ShowEnvironmentVariableValues);
+        }
+
+        if (settings.CheckHostOnlineStatuses)
+        {
+            actionTaken = true;
+            definitionManager.DisplayHostStatuses();
         }
 
         if (!actionTaken)
