@@ -24,8 +24,8 @@ release: publish-linux publish-windows
 	cp bin/Release/net10.0/linux-x64/publish/ssh-nav $(RELEASE_DIR)
 	cp bin/Release/net10.0/win-x64/publish/ssh-nav.exe $(RELEASE_DIR)
 	cp ssh-nav.json $(RELEASE_DIR)
-	cd $(RELEASE_DIR); tar -czf linux.tar.gz ssh-nav ssh-nav.json
-	cd $(RELEASE_DIR); zip windows.zip ssh-nav.exe ssh-nav.json
+	cd $(RELEASE_DIR); tar -czf ssh-nav-linux.tar.gz ssh-nav ssh-nav.json
+	cd $(RELEASE_DIR); zip ssh-nav-windows.zip ssh-nav.exe ssh-nav.json
 
 clean:
 	dotnet clean
