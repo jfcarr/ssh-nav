@@ -103,24 +103,13 @@ public class DefinitionManager
 
     public void DisplayHostStatuses()
     {
-        Table hostDefinitionsTable = new();
-
-        hostDefinitionsTable.AddColumn("Name");
-        hostDefinitionsTable.AddColumn("Type");
-        hostDefinitionsTable.AddColumn("Host Name");
-        hostDefinitionsTable.AddColumn("Status");
-
-        AnsiConsole.Live(hostDefinitionsTable).Start(ctx =>
+        foreach (HostDefinition item in this.HostDefinitions)
         {
-            foreach (HostDefinition item in this.HostDefinitions)
-            {
-                bool status = NetworkUtil.Ping(item.HostName ?? "");
+            bool isOnline = NetworkUtil.Ping(item.HostName ?? "");
 
-                hostDefinitionsTable.AddRow(item.Name ?? "", item.Type ?? "", item.HostName ?? "", (status) ? "[green]Online[/]" : "[red]Offline[/]");
-                ctx.Refresh();
-            }
-        });
+            AnsiConsole.Markup(isOnline ? "[green]Online[/]  : " : "[red]Offline[/] : ");
 
-        Console.WriteLine("");
+            Console.WriteLine($"{item.Name} - {item.Type} ({item.HostName})");
+        }
     }
 }
