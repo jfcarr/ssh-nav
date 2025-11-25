@@ -14,11 +14,11 @@ internal sealed class FileSizeCommand : Command<FileSizeCommand.Settings>
     public sealed class Settings : CommandSettings
     {
         [Description("Connect using definition named 'name'.")]
-        [CommandOption("-n|--name")]
+        [CommandOption("-n|--name <name>")]
         public string? UseName { get; init; }
 
         [Description("Connect as type 'type'. Possible values are 'ssh' and 'sftp'.")]
-        [CommandOption("-t|--type")]
+        [CommandOption("-t|--type <type>")]
         [DefaultValue("ssh")]
         public string? UseType { get; init; }
 
@@ -46,6 +46,11 @@ internal sealed class FileSizeCommand : Command<FileSizeCommand.Settings>
         [CommandOption("-o|--online")]
         [DefaultValue(false)]
         public bool CheckHostOnlineStatuses { get; init; }
+
+        [Description("Filter by text, where applicable.")]
+        [CommandOption("-f|--filter <text>")]
+        public string? UseFilterText { get; init; }
+
     }
 
     public override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
@@ -70,13 +75,13 @@ internal sealed class FileSizeCommand : Command<FileSizeCommand.Settings>
         if (settings.DisplayHostDefinitions)
         {
             actionTaken = true;
-            definitionManager.DisplayDefinitions(settings.ShowPasswordValues, settings.ShowEnvironmentVariableValues);
+            definitionManager.DisplayDefinitions(settings.ShowPasswordValues, settings.ShowEnvironmentVariableValues, settings.UseFilterText);
         }
 
         if (settings.CheckHostOnlineStatuses)
         {
             actionTaken = true;
-            definitionManager.DisplayHostStatuses();
+            definitionManager.DisplayHostStatuses(settings.UseFilterText);
         }
 
         if (!actionTaken)

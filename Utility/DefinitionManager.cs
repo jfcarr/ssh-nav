@@ -13,7 +13,7 @@ public class DefinitionManager
 
     public List<HostDefinition> HostDefinitions { get; set; }
 
-    public void DisplayDefinitions(bool showPasswordValues, bool showEnvironmentVariableValues)
+    public void DisplayDefinitions(bool showPasswordValues, bool showEnvironmentVariableValues, string? filterText = "")
     {
         Table hostDefinitionsTable = new();
 
@@ -25,28 +25,31 @@ public class DefinitionManager
 
         foreach (HostDefinition item in this.HostDefinitions)
         {
-            string? passwordDisplay;
-            switch (item.PasswordType)
+            if (filterText is null || (item.Name is not null && item.Name.Contains(filterText)) || (item.HostName is not null && item.HostName.Contains(filterText)))
             {
-                case "inline":
-                    passwordDisplay = "Hard Coded";
-                    if (showPasswordValues)
-                        passwordDisplay = $"{passwordDisplay}: {item.Password}";
-                    break;
-                case "env_variable":
-                    passwordDisplay = $"Environment variable";
-                    if (showEnvironmentVariableValues)
-                        passwordDisplay = $"{passwordDisplay}: {item.Password}";
-                    break;
-                case "prompt":
-                    passwordDisplay = "User Prompt";
-                    break;
-                default:
-                    passwordDisplay = "";
-                    break;
-            }
+                string? passwordDisplay;
+                switch (item.PasswordType)
+                {
+                    case "inline":
+                        passwordDisplay = "Hard Coded";
+                        if (showPasswordValues)
+                            passwordDisplay = $"{passwordDisplay}: {item.Password}";
+                        break;
+                    case "env_variable":
+                        passwordDisplay = $"Environment variable";
+                        if (showEnvironmentVariableValues)
+                            passwordDisplay = $"{passwordDisplay}: {item.Password}";
+                        break;
+                    case "prompt":
+                        passwordDisplay = "User Prompt";
+                        break;
+                    default:
+                        passwordDisplay = "";
+                        break;
+                }
 
-            hostDefinitionsTable.AddRow(item.Name ?? "", item.Type ?? "", item.HostName ?? "", item.UserName ?? "", passwordDisplay);
+                hostDefinitionsTable.AddRow(item.Name ?? "", item.Type ?? "", item.HostName ?? "", item.UserName ?? "", passwordDisplay);
+            }
         }
 
         AnsiConsole.Write(hostDefinitionsTable);
@@ -101,15 +104,18 @@ public class DefinitionManager
             return -99;
     }
 
-    public void DisplayHostStatuses()
+    public void DisplayHostStatuses(string? filterText = "")
     {
         foreach (HostDefinition item in this.HostDefinitions)
         {
-            bool isOnline = NetworkUtil.Ping(item.HostName ?? "");
+            if (filterText is null || (item.Name is not null && item.Name.Contains(filterText)) || (item.HostName is not null && item.HostName.Contains(filterText)))
+            {
+                bool isOnline = NetworkUtil.Ping(item.HostName ?? "");
 
-            AnsiConsole.Markup(isOnline ? "[green]Online[/]  : " : "[red]Offline[/] : ");
+                AnsiConsole.Markup(isOnline ? "[green]Online[/]  : " : "[red]Offline[/] : ");
 
-            Console.WriteLine($"{item.Name} - {item.Type} ({item.HostName})");
+                Console.WriteLine($"{item.Name} - {item.Type} ({item.HostName})");
+            }
         }
     }
 }
